@@ -1,0 +1,5 @@
+FROM nicolas/webdis:latest
+COPY webdis/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["webdis", "/etc/webdis.json"]
