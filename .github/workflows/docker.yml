@@ -39,6 +39,17 @@ jobs:
             SOURCE_COMMIT=${{ steps.vars.outputs.commit }}
             SOURCE_TAG=${{ steps.vars.outputs.tag }}
 
+      - name: Build and push Docker image Webdis
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.webdis
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cis-vproxy-webdis:latest
+          build-args: |
+            SOURCE_COMMIT=${{ steps.vars.outputs.commit }}
+            SOURCE_TAG=${{ steps.vars.outputs.tag }}
+
       - name: Notify Telegram
         if: success()
         run: |
