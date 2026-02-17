@@ -65,7 +65,7 @@ RUN mkdir -p /etc/nginx/js \
  && ln -sf /dev/stdout /var/log/nginx/access.log \
  && ln -sf /dev/stderr /var/log/nginx/error.log
 
-COPY nginx/nginx.flixcdn.conf /etc/nginx/nginx.conf.template
+COPY nginx/nginx.flixvcdn.conf /etc/nginx/nginx.conf.template
 COPY nginx/conf.d/ /etc/nginx/conf.d/
 COPY js/ /etc/nginx/js/
 COPY nginx/docker-entrypoint.sh /docker-entrypoint.sh
