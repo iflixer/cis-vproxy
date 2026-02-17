@@ -50,13 +50,13 @@ jobs:
             SOURCE_COMMIT=${{ steps.vars.outputs.commit }}
             SOURCE_TAG=${{ steps.vars.outputs.tag }}
 
-      - name: Build and push Docker image Flixcdn
+      - name: Build and push Docker image Flixvcdn
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile.flixcdn
+          file: ./Dockerfile.flixvcdn
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cis-vproxy-flixcdn:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cis-vproxy-flixvcdn:latest
           build-args: |
             SOURCE_COMMIT=${{ steps.vars.outputs.commit }}
             SOURCE_TAG=${{ steps.vars.outputs.tag }}
