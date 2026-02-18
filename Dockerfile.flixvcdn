@@ -36,6 +36,7 @@ RUN ./configure \
     --with-http_sub_module \
     --with-http_gzip_static_module \
     --with-http_stub_status_module \
+    --with-http_http_slice_module \
     --add-module=../njs-${NJS_VERSION}/nginx \
     --with-pcre-jit \            
  && make && make install
@@ -80,9 +81,9 @@ RUN mkdir -p /etc/nginx/certs \
       -keyout /etc/nginx/certs/privkey_ecc.pem \
       -out   /etc/nginx/certs/fullchain_ecc.pem \
  && cp /etc/nginx/certs/privkey_ecc.pem /etc/nginx/certs/privkey.pem \
- && cp /etc/nginx/certs/fullchain_ecc.pem /etc/nginx/certs/fullchain.pem
-RUN nginx -t
-
+ && cp /etc/nginx/certs/fullchain_ecc.pem /etc/nginx/certs/fullchain.pem \
+ && nginx -t \
+ && rm -f /etc/nginx/certs/*.pem
 
 RUN adduser --system --no-create-home --group nginx || true
 
