@@ -73,6 +73,17 @@ COPY js/ /etc/nginx/js/
 # COPY nginx/docker-entrypoint.sh /docker-entrypoint.sh
 # RUN chmod +x /docker-entrypoint.sh
 
+# check config
+RUN mkdir -p /etc/nginx/certs \
+ && openssl req -x509 -nodes -newkey rsa:2048 -days 1 \
+      -subj "/CN=dummy" \
+      -keyout /etc/nginx/certs/privkey_ecc.pem \
+      -out   /etc/nginx/certs/fullchain_ecc.pem \
+ && cp /etc/nginx/certs/privkey_ecc.pem /etc/nginx/certs/privkey_rsa.pem \
+ && cp /etc/nginx/certs/fullchain_ecc.pem /etc/nginx/certs/fullchain_rsa.pem
+RUN nginx -t
+
+
 RUN adduser --system --no-create-home --group nginx || true
 
 EXPOSE 80
