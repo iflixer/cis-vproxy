@@ -77,10 +77,8 @@ COPY js/ /etc/nginx/js/
 RUN mkdir -p /etc/nginx/certs \
  && openssl req -x509 -nodes -newkey rsa:2048 -days 1 \
       -subj "/CN=dummy" \
-      -keyout /etc/nginx/certs/privkey_ecc.pem \
-      -out   /etc/nginx/certs/fullchain_ecc.pem \
- && cp /etc/nginx/certs/privkey_ecc.pem /etc/nginx/certs/privkey_rsa.pem \
- && cp /etc/nginx/certs/fullchain_ecc.pem /etc/nginx/certs/fullchain_rsa.pem
+      -keyout /etc/nginx/certs/privkey.pem \
+      -out   /etc/nginx/certs/fullchain.pem 
 RUN nginx -t
 
 
