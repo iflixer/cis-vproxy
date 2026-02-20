@@ -59,6 +59,7 @@ RUN apt-get update && apt-get install -y \
     bash \
     curl \
     netcat-openbsd \
+    iputils-ping \
     rclone openssl ca-certificates coreutils \
  && rm -rf /var/lib/apt/lists/*
 
