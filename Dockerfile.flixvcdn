@@ -57,6 +57,8 @@ RUN apt-get update && apt-get install -y \
     libxml2 \
     gettext-base \
     bash \
+    curl \
+    netcat-openbsd \
     rclone openssl ca-certificates coreutils \
  && rm -rf /var/lib/apt/lists/*
 
