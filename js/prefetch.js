@@ -1,6 +1,7 @@
 // предзагрузка следующего сегмента TS при MISS
 // например если плеер запросил /indi/5199/17698/203017/out289.ts - скорее всего он запросит /indi/5199/17698/203017/out290.ts, так что мы его предзагрузим и в плеере он будет HIT
-// /etc/nginx/js/prefetch.js
+// /noise/movies/7aae94ccbe20920b159524e717d186c210d24b17/6853d794902a95dd40c79f48b7edca1c:2026022213/1080.mp4:hls:seg-202-v1-a1.ts
+
 
 function isPf(r) {
   const a = r.args;
@@ -27,19 +28,23 @@ function header(r) {
     if (r.ctx.prefetch_started) return;
     r.ctx.prefetch_started = true;
 
-    const m = (r.uri || "").match(/^(.*\/out)(\d+)(\.ts)$/i);
-    if (!m) return;
+    var uri = r.uri;
 
-    const n = Number(m[2]);
-    if (!Number.isFinite(n)) return;
+    var m = uri.match(/seg-(\d+)-/);
+    if (!m) {
+        return;
+    }
 
-    const nextUri = `${m[1]}${n + 1}${m[3]}`;
+    var n = parseInt(m[1], 10);
+    var next = n + 1;
+
+    var next_uri = uri.replace(/seg-\d+-/, "seg-" + next + "-");
 
     // КЛЮЧ: detached, без callback => nginx не буферизует тело сабреквеста
-    r.subrequest(`${nextUri}?pf=1`, { method: "GET", detached: true });
+    r.subrequest(`${next_uri}?pf=1`, { method: "GET", detached: true });
 
-    //r.warn(`prefetch scheduled: ${nextUri}?pf=1`);
-    //jlog(r, "warn", "prefetch scheduled", { next: nextUri + "?pf=1" });
+    //r.warn(`prefetch scheduled: ${next_uri}?pf=1`);
+    //jlog(r, "warn", "prefetch scheduled", { next: next_uri + "?pf=1" });
   } catch (e) {
     jlog(r, "error", "prefetch exception", { error: String(e) });
   }
