@@ -22,9 +22,7 @@ function check_sign(r) {
     // }
     // $parsed['scheme']."://".$parsed['host']."/".$sign.":".$time.$parsed['path'].$parsed['file'];
     var expected = md5hex(tohash);
-    r.log(`Проверка подписи: ${tohash}`);
-    r.log(`expected: ${expected}`);
-    r.log(`sign: ${sign}`);									
+								
 
     if (expected === sign) {
         return filepath + filename;
