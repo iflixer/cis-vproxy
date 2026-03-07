@@ -39,8 +39,8 @@ RUN mkdir -p /etc/nginx/certs \
       -out   /etc/nginx/certs/fullchain_ecc.pem \
  && cp /etc/nginx/certs/privkey_ecc.pem /etc/nginx/certs/privkey.pem \
  && cp /etc/nginx/certs/fullchain_ecc.pem /etc/nginx/certs/fullchain.pem \
- && nginx -t 
-#  && rm -f /etc/nginx/certs/*.pem
+ && nginx -t \
+&& rm -f /etc/nginx/certs/*.pem
 
 # Переменные окружения для Wasabi (лучше задавать через docker secrets/env, а не в образе)
 ENV WASABI_ACCESS_KEY=""
