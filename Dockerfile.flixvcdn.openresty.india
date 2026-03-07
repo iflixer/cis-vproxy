@@ -1,0 +1,56 @@
+
+FROM openresty/openresty:alpine
+
+# Пакеты: luarocks + crypto deps + полезняшки для отладки
+RUN apk add --no-cache \
+     bash ca-certificates curl git \
+      lua5.1 lua5.1-dev \
+      luarocks5.1 \
+     openssl \
+      openssl-dev \
+      build-base \
+    && ln -sf /usr/bin/luarocks-5.1 /usr/local/bin/luarocks \
+    && luarocks --version \
+    && update-ca-certificates
+
+# Lua-модули для SigV4
+# resty.openssl.hmac / resty.sha256 / resty.string
+RUN luarocks install lua-resty-openssl \
+ && luarocks install lua-resty-string
+
+# (Опционально) если будешь делать HTTP внутри Lua:
+RUN luarocks install lua-resty-http
+
+# Конфиги и Lua-библиотеки
+# nginx.conf -> /usr/local/openresty/nginx/conf/nginx.conf
+# lualib -> /usr/local/openresty/lualib/
+COPY openresty/india/flixvcdn.conf /usr/local/openresty/nginx/conf/nginx.conf
+COPY openresty/lualib/ /usr/local/openresty/lualib/
+
+# Кэш
+RUN mkdir -p /var/cache/nginx/s3 && chown -R nobody:nobody /var/cache/nginx
+
+# TLS (если нужно) — можешь монтировать как volume вместо COPY
+# COPY certs/ /etc/nginx/certs/
+RUN mkdir -p /etc/nginx/certs \
+ && openssl req -x509 -nodes -newkey rsa:2048 -days 1 \
+      -subj "/CN=dummy" \
+      -keyout /etc/nginx/certs/privkey_ecc.pem \
+      -out   /etc/nginx/certs/fullchain_ecc.pem \
+ && cp /etc/nginx/certs/privkey_ecc.pem /etc/nginx/certs/privkey.pem \
+ && cp /etc/nginx/certs/fullchain_ecc.pem /etc/nginx/certs/fullchain.pem \
+ && nginx -t 
+#  && rm -f /etc/nginx/certs/*.pem
+
+# Переменные окружения для Wasabi (лучше задавать через docker secrets/env, а не в образе)
+ENV WASABI_ACCESS_KEY=""
+ENV WASABI_SECRET_KEY=""
+ENV WASABI_BUCKET=""
+ENV WASABI_REGION=""
+ENV WASABI_PREFIX=""
+
+EXPOSE 80 443
+
+STOPSIGNAL SIGQUIT
+
+CMD ["/usr/local/openresty/bin/openresty", "-g", "daemon off;"]

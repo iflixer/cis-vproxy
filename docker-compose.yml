@@ -1,36 +1,60 @@
 
 services:
-  nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile.nginx
-    container_name: nginx-njs
-    ports:
-      - "8089:80"
-    environment:
-      - WEBDIS_HOST=webdis
-      - WEBDIS_PORT=7379
-      - TEST_ENV=qwe
-      - SIGN_KEY=${SIGN_KEY}
-    depends_on:
-      - webdis
+  # nginx:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.nginx
+  #   container_name: nginx-njs
+  #   ports:
+  #     - "8089:80"
+  #   environment:
+  #     - WEBDIS_HOST=webdis
+  #     - WEBDIS_PORT=7379
+  #     - TEST_ENV=qwe
+  #     - SIGN_KEY=${SIGN_KEY}
+  #   depends_on:
+  #     - webdis
 
-  redis:
-    image: redis:7-alpine
-    container_name: redis-server
-    ports:
-      - "16379:6379"
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: redis-server
+  #   ports:
+  #     - "16379:6379"
 
-  webdis:
-    build:
+  # webdis:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.webdis
+  #   # image: nicolas/webdis:latest
+  #   container_name: webdis
+  #   ports:
+  #     - "17379:7379"
+  #   depends_on:
+  #     - redis
+  #   environment:
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+
+
+  openresty:
+    build: 
       context: .
-      dockerfile: Dockerfile.webdis
-    # image: nicolas/webdis:latest
-    container_name: webdis
+      dockerfile: Dockerfile.flixvcdn.openresty.india
+    container_name: openresty-flixvcdn-india
     ports:
-      - "17379:7379"
-    depends_on:
-      - redis
+      - "80:80"
+      - "443:443"
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - WASABI_ACCESS_KEY=${WASABI_ACCESS_KEY}
+      - WASABI_SECRET_KEY=${WASABI_SECRET_KEY}
+      - WASABI_BUCKET=${WASABI_BUCKET}
+      - WASABI_REGION=${WASABI_REGION}
+      - WASABI_PREFIX=${WASABI_PREFIX}
+    volumes:
+      # - ./certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
+      # - ./certs/privkey.pem:/etc/nginx/certs/privkey.pem:ro
+      - openresty_s3cache:/var/cache/nginx
+    restart: unless-stopped
+
+volumes:
+  openresty_s3cache:
