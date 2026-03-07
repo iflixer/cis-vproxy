@@ -43,13 +43,6 @@ RUN mkdir -p /etc/nginx/certs \
  && nginx -t \
 && rm -f /etc/nginx/certs/*.pem
 
-# Переменные окружения для Wasabi (лучше задавать через docker secrets/env, а не в образе)
-ENV WASABI_ACCESS_KEY=""
-ENV WASABI_SECRET_KEY=""
-ENV WASABI_BUCKET=""
-ENV WASABI_REGION=""
-ENV WASABI_PREFIX=""
-
 EXPOSE 80 443
 
 STOPSIGNAL SIGQUIT
