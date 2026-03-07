@@ -6,9 +6,10 @@ RUN apk add --no-cache \
      bash ca-certificates curl git \
       lua5.1 lua5.1-dev \
       luarocks5.1 \
-     openssl \
+      openssl \
       openssl-dev \
       build-base \
+      rclone \
     && ln -sf /usr/bin/luarocks-5.1 /usr/local/bin/luarocks \
     && luarocks --version \
     && update-ca-certificates
