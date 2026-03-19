@@ -97,19 +97,20 @@ jobs:
           build-args: |
             SOURCE_COMMIT=${{ steps.vars.outputs.commit }}
             SOURCE_TAG=${{ steps.vars.outputs.tag }}
+            MAXMIND_LICENSE_KEY=${{ secrets.MAXMIND_LICENSE_KEY }}
 
-      # - name: Build and push Docker image Flixvcdn.brazil.openresty
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     context: .
-      #     file: ./Dockerfile.flixvcdn.openresty.brazil
-      #     push: true
-      #     tags: |
-      #       ghcr.io/${{ github.repository_owner }}/cis-vproxy-flixvcdn-openresty-brazil:latest
-      #       ghcr.io/${{ github.repository_owner }}/cis-vproxy-flixvcdn-openresty-brazil:${{ steps.vars.outputs.tag }}
-      #     build-args: |
-      #       SOURCE_COMMIT=${{ steps.vars.outputs.commit }}
-      #       SOURCE_TAG=${{ steps.vars.outputs.tag }}
+      - name: Build and push Docker image Flixvcdn.brazil.openresty
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.flixvcdn.openresty.brazil
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/cis-vproxy-flixvcdn-openresty-brazil:latest
+            ghcr.io/${{ github.repository_owner }}/cis-vproxy-flixvcdn-openresty-brazil:${{ steps.vars.outputs.tag }}
+          build-args: |
+            SOURCE_COMMIT=${{ steps.vars.outputs.commit }}
+            SOURCE_TAG=${{ steps.vars.outputs.tag }}
 
       - name: Notify Telegram
         if: success()
