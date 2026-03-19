@@ -102,7 +102,7 @@ jobs:
         run: |
           mkdir -p geoip
           curl -fsSL "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=${{ secrets.MAXMIND_LICENSE_KEY }}&suffix=tar.gz" \
-            | tar -xz --strip-components=1 -C ./geoip "*/GeoLite2-Country.mmdb"
+            | tar -xz --strip-components=1 --wildcards -C ./geoip "*/GeoLite2-Country.mmdb"
 
       - name: Build and push Docker image Flixvcdn.brazil.openresty
         uses: docker/build-push-action@v5
