@@ -12,6 +12,7 @@ RUN apk add --no-cache \
       rclone \
       libmaxminddb \
       libmaxminddb-dev \
+      perl \
     && ln -sf /usr/bin/luarocks-5.1 /usr/local/bin/luarocks \
     && luarocks --version \
     && update-ca-certificates
@@ -28,10 +29,10 @@ RUN luarocks install lua-resty-http
 RUN luarocks install lua-resty-maxminddb
 
 # GeoLite2 database
-ARG MAXMIND_LICENSE_KEY
-RUN mkdir -p /usr/share/GeoIP \
- && curl -fsSL "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=${MAXMIND_LICENSE_KEY}&suffix=tar.gz" \
-    | tar -xz --strip-components=1 -C /usr/share/GeoIP "*/GeoLite2-Country.mmdb"
+# Файл скачивается в CI до сборки:
+#   curl -fsSL "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=${MAXMIND_LICENSE_KEY}&suffix=tar.gz" \
+#     | tar -xz --strip-components=1 -C ./geoip "*/GeoLite2-Country.mmdb"
+COPY geoip/GeoLite2-Country.mmdb /usr/share/GeoIP/GeoLite2-Country.mmdb
 
 # Конфиги и Lua-библиотеки
 # nginx.conf -> /usr/local/openresty/nginx/conf/nginx.conf
