@@ -43,8 +43,6 @@ COPY openresty/lualib/ /usr/local/openresty/lualib/
 # Кэш
 RUN mkdir -p /var/cache/nginx/s3 && chown -R nobody:nobody /var/cache/nginx
 
-# TLS (если нужно) — можешь монтировать как volume вместо COPY
-# COPY certs/ /etc/nginx/certs/
 RUN mkdir -p /etc/nginx/certs \
  && openssl req -x509 -nodes -newkey rsa:2048 -days 1 \
       -subj "/CN=dummy" \
