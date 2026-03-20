@@ -52,10 +52,10 @@ local function canonical_query()
 end
 
 function _M.sign_request()
-  local access_key = os.getenv("WASABI_ACCESS_KEY")
-  local secret_key = os.getenv("WASABI_SECRET_KEY")
+  local access_key = os.getenv("S3_VIDEO_STORAGE_ACCESS_KEY")
+  local secret_key = os.getenv("S3_VIDEO_STORAGE_SECRET_KEY")
   if not access_key or not secret_key then
-    ngx.log(ngx.ERR, "WASABI_ACCESS_KEY/SECRET_KEY not set")
+    ngx.log(ngx.ERR, "S3_VIDEO_STORAGE_ACCESS_KEY/SECRET_KEY not set")
     return ngx.exit(500)
   end
 
